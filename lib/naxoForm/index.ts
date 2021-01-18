@@ -67,13 +67,8 @@ export default class naxoForm {
   }
   // Validation
   Validate(): boolean {
-    let validity = this.bindEl.checkValidity();
-    if (!validity) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
     this.bindEl.classList.add("was-validated");
-    return validity;
+    return this.bindEl.checkValidity();
   }
   // clear validation
   ValidateReset(): void {

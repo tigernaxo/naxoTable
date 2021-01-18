@@ -1,5 +1,5 @@
-/*
-bootstrap example:
+```js
+// bootstrap example:
 <nav aria-label="Page navigation example">
   <ul class="pagination justify-content-end">
     <li class="page-item disabled">
@@ -12,4 +12,4 @@ bootstrap example:
     </li>
   </ul>
 </nav>
- */
+```

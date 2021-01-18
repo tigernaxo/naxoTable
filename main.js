@@ -58,4 +58,4 @@ table.rows = [
   { col1: 9, col2: 2, col3: 3, col4: 4 },
   { col1: 10, col2: 2, col3: 3, col4: 4 },
 ];
-table.mount();
+table.render();

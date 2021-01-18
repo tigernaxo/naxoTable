@@ -65,7 +65,6 @@ export class pn_Nav {
     let endPage = haveRestAfter
       ? conf.page + (conf.span - 1) / 2
       : conf.pageNum; // 結束頁
-    // console.log("startPage: " + startPage + "; endPage: " + endPage + " ;");
     for (let page = startPage; page <= endPage; page++) {
       domNavUl.appendChild(
         pn_NavUlLi.getDom({

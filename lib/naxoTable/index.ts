@@ -44,9 +44,7 @@ export default class naxoTable {
 
   public Conf(config: IConfig) {
     // 刪除 config 當中指定的 table id
-    if (config.attrs?.table?.["id"] !== undefined) {
-      delete config.attrs.table["id"];
-    }
+    delete config.attrs.table["id"];
     // 加到 table 物件的設定中
     (<any>Object).assign(this.config, { ...config });
     // 把 attr 應用到 table 上
@@ -54,7 +52,7 @@ export default class naxoTable {
       naxoDom.applyAttrs(this.bindDom, this.config.attrs.table);
     }
   }
-  public mount() {
+  public render() {
     this.bindDom.innerHTML = ""; // 清空
     this.bindDom.appendChild(Table.getDom(this));
     this.bindDom.appendChild(Pagination.getDom(this.config.pagination));
@@ -62,11 +60,11 @@ export default class naxoTable {
   public benchmark(times: number) {
     let start = Date.now();
     for (let i = 0; i < times; i++) {
-      this.mount();
+      this.render();
     }
     let duration = Date.now() - start;
     console.log(
-      "[benchmark] 掛載次數：" + times + "; 使用時間：" + duration + "(毫秒)"
+      `[benchmark] Table render ${times} times, time used: ${duration}ms`
     );
   }
 }
