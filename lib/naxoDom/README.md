@@ -1,6 +1,7 @@
 - [naxoDom](#naxodom)
-  - [將Html解析為Dom](#將html解析為dom)
-  - [為Dom套用屬性](#為dom套用屬性)
+  - [將 Html 解析為 Dom](#將-html-解析為-dom)
+  - [從 js 物件產生 Dom](#從-js-物件產生-dom)
+  - [為 Dom 套用屬性](#為-dom-套用屬性)
 
 # naxoDom
 ```js
@@ -13,13 +14,30 @@
   let dom: HTMLElement = naxoDom.getDom(arr);
 }
 ```
-## 將Html解析為Dom
+## 將 Html 解析為 Dom
 ```js
 let el = naxoDom.parse(`<div></div>`)
 el
 // <div></div>
 ```
-## 為Dom套用屬性
+## 從 js 物件產生 Dom
+```js
+let obj = {
+  name: 'div',
+  attrs: {
+    class:[ 'spinner-border', 'text-primary' ], 
+    role: 'status', 
+    'v-data': '' 
+  }
+}
+let el = naxoDom.getDom(obj)
+el
+/*  
+<div class="spinner-border text-primary" role="status" v-data>
+</div>
+*/
+```
+## 為 Dom 套用屬性
 接收一個屬性物件，可以是 string 或 string array，如果是 string array 會自動串接成以空白字元分隔的字串。  
 - 清單陣列：會變成以空白字元分隔的屬性。
 - 字串：直接成為屬性值。
@@ -32,7 +50,7 @@ let attrs = {
   'v-data': '' 
   }
 let el = naxoDom.parse(`
-  <div class="spinner-border text-primary" role="status" v-data>
+  <div>
     <span class="visually-hidden">Loading...</span>
   </div>
 `)
