@@ -43,8 +43,11 @@ export default class naxoTable {
   }
 
   public Conf(config: IConfig) {
-    // 刪除 config 當中指定的 table id
-    delete config.attrs.table["id"];
+    // 先刪除 config 當中指定的 table id
+    if(config?.attrs?.table["id"])
+    {
+      delete config.attrs.table["id"];
+    }
     // 加到 table 物件的設定中
     (<any>Object).assign(this.config, { ...config });
     // 把 attr 應用到 table 上

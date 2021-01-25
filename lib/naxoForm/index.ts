@@ -1,4 +1,5 @@
 export default class naxoForm {
+  private static selectStr: string = 'input,textarea,select';
   bindEl: HTMLFormElement;
   constructor(idOrEl: string | HTMLFormElement) {
     // 綁定 Dom
@@ -21,17 +22,17 @@ export default class naxoForm {
   // GetData 取得填入的資料 {id: value}
   GetData(): any {
     let data: any = {};
-    this.bindEl.childNodes.forEach((el) => {
+    this.getInputElements().forEach(el=>{
       if ((<Element>el).id) {
         data[(<Element>el).id] = naxoForm.getValue(<HTMLInputElement>el);
       }
-    });
+    })
     return data;
   }
   // Clear 清除 form 當中所有輸入
   Clear(): void {
     let key: string;
-    this.bindEl.childNodes.forEach((el) => {
+    this.getInputElements().forEach((el) => {
       key = (<Element>el).id;
       if (key) {
         let type: string = (<HTMLElement>el).getAttribute("type");
@@ -55,7 +56,7 @@ export default class naxoForm {
   // GetFormData 直接產生 FormData
   GetFormData(): FormData {
     let fd: FormData = new FormData();
-    let nodes = this.bindEl.childNodes;
+    let nodes: NodeListOf<Element> = this.getInputElements();
     let key: string;
     nodes.forEach((el) => {
       key = (<Element>el).id;
@@ -73,6 +74,9 @@ export default class naxoForm {
   // clear validation
   ValidateReset(): void {
     this.bindEl.classList.remove("was-validated");
+  }
+  private  getInputElements():NodeListOf<Element>{
+    return this.bindEl.querySelectorAll(naxoForm.selectStr)
   }
   // getValue 取得 HTMLInputElement 的值
   private static getValue(
@@ -93,7 +97,7 @@ export default class naxoForm {
           value = numberIsNaNToNull(parseFloat(el.value));
           break;
         case "file":
-          value = el.files[-1];
+          value = el.files[0];
           break;
         default:
           value = stringEmptyToNull(<string>el.value);
