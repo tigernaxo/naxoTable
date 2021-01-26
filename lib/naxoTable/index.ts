@@ -32,13 +32,14 @@ export default class naxoTable {
   rows: Array<{ [key: string]: any }> = [];
   constructor(id: string) {
     this.bindDom = document.getElementById(id);
-    // 產生 Table element
+
+    // 清空bindDom底下所有元素
+    this.bindDom.innerHTML = '' 
+
+    // 將 this.bindDom 掛接上 table
     let table: HTMLElement = naxoDom.getDom(
       (<any>Object).assign({ name: "table", attrs: { id } })
     );
-
-    // 把 this.bindDom 取代成 table
-    // this.bindDom.parentNode.replaceChild(table, this.bindDom);
     this.bindDom.appendChild(table);
   }
 
