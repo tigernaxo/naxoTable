@@ -35,8 +35,7 @@ npm run dev
 ```
 接著打開 http://localhost:3000/，目前很簡易(程式參考 main.js)，有空會再慢慢補上。
 ## Dependency
-- Bootstrap5
-- nodejs
+- [Bootstrap5](https://getbootstrap.com/docs/5.0/getting-started/download/)
 ## Release
 ## Compile
 依照下列步驟使用 vite 進行編譯：
