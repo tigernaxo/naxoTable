@@ -37,6 +37,7 @@ npm run dev
 ## Dependency
 - [Bootstrap5](https://getbootstrap.com/docs/5.0/getting-started/download/)
 ## Release
+[naxoTable 1.0.0](https://github.com/tigernaxo/naxoTable/files/5900050/naxoTable-1.0.0.zip)
 ## Compile
 依照下列步驟使用 vite 進行編譯：
 ```bash
