@@ -1,6 +1,7 @@
 import naxoDom from "../../naxoDom";
 import { pn_Nav } from "./pn_Nav";
 export interface IConfigPagination {
+  show: boolean;
   pageNum: number;
   page: number;
   span?: number;

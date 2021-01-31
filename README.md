@@ -26,7 +26,7 @@
     - [benchmark()](#benchmark)
 
 # QuickStart
-觀看範例吧：
+觀看範例吧(需要安裝 [nodejs](https://nodejs.org/en/))：
 ```bash
 git clone https://github.com/tigernaxo/naxoTable.git
 cd naxoTable

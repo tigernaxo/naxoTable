@@ -22,8 +22,9 @@ export default class naxoTable {
     attrs: {},
     columns: {},
     pagination: {
-      pageNum: 10,
-      page: 2,
+      show: false,
+      pageNum: 5,
+      page: 1,
       onclick: function (page: number) {
         console.log(page);
       },
@@ -51,15 +52,13 @@ export default class naxoTable {
     }
     // 加到 table 物件的設定中
     (<any>Object).assign(this.config, { ...config });
-    // 把 attr 應用到 table 上
-    if (this.config.attrs.table) {
-      naxoDom.applyAttrs(this.bindDom, this.config.attrs.table);
-    }
   }
   public render() {
     this.bindDom.innerHTML = ""; // 清空
     this.bindDom.appendChild(Table.getDom(this));
-    this.bindDom.appendChild(Pagination.getDom(this.config.pagination));
+    if(this.config.pagination.show) {
+      this.bindDom.appendChild(Pagination.getDom(this.config.pagination));
+    }
   }
   public benchmark(times: number) {
     let start = Date.now();

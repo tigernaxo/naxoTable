@@ -6,10 +6,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <link rel="icon" href="./favicon.ico" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/default.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>naxoTable Demo</title>
   </head>
   <body>
+    <div>
     <div class="alert alert-success m-1" role="alert">
       naxoForm 的實際應用：一行對 Form 存取資料、驗證
     </div>
@@ -54,7 +56,7 @@
       <label for="satisfyScore" class="form-label">用餐滿意度</label>
       <input type="range" class="form-range" id="satisfyScore">
     </form>
-<div class="row">    
+<div class="row mw-100">    
 <div class="col">
 將資料載入表單 <button type="button" class="btn btn-outline-success" onclick="
   (new naxoForm('form1')).Load({
@@ -85,7 +87,7 @@ form1.Load({
 form1.Clear()</code></pre>
 </div>
 </div>
-<div class="row">    
+<div class="row mw-100">    
 <div class="col">
     取得所有表單資料(json)
     <button type="button" class="btn btn-outline-success" onclick="window.console.log((new naxoForm('form1')).GetData())">
@@ -113,7 +115,8 @@ form1.GetData()
 form1.GetFromData()
 // FormData {} </code></pre>
 </div>    
-<div class="row">
+    </div>    
+<div class="row mw-100">
   <div class="col">
     驗證表單資料
     <button type="button" class="btn btn-outline-success" onclick="(new naxoForm('form1')).Validate()">
@@ -131,13 +134,137 @@ form1.Validate() </code></pre>
 form1.ValidateReset() </code></pre>
     </div>
 </div>
+</div>
     <div class="alert alert-success m-1" role="alert">
       naxoTable 搭配 naxoDom 的實際應用：製作靈活變化的 Table... 待續 </div>
-  </div>    
-    <pre><code class="javascript">[
-  { name: 'Peter', gender: 1, age: 36,  },
+      假設有下面的資料，要利用 naxoTable 畫成 Table
+    <pre><code class="javascript">let data = [
+  { id: 1, name: 'Taichung', time: '2021/1/30', weather: 'sunny', aqi: 39, temperature: [12, 22] },
+  { id: 2, name: 'Taichung', time: '2021/1/31', weather: 'windy', aqi: 56, temperature: [13, 22] },
+  { id: 3, name: 'Taichung', time: '2021/2/1', weather: 'rainy', aqi: 68, temperature: [14, 22] },
+  { id: 4, name: 'Taichung', time: '2021/2/2', weather: 'sunny', aqi: 77, temperature: [16, 22] },
+  { id: 5, name: 'Taichung', time: '2021/2/3', weather: 'cloudy', aqi: 108, temperature: [15, 22] },
+  { id: 6, name: 'Taichung', time: '2021/2/4', weather: 'sunny', aqi: 87, temperature: [16, 22] },
 ]</code></pre>
-    <div id="tableMountPoint"></div>
+<div id="table-section01">
+最簡單的方式就是設定要顯示的欄位、欄位名稱，呼叫渲染函式，直接得到渲染的結果：
+    <pre><code class="javascript">// 起始化一個 naxoTable
+let t1 = new naxoTable("tableMountPoint1");
+// 設置 naxoTable
+t1.Conf({
+  // 只有 columns 設置的欄位會被顯示，並以 title 作為欄位名稱
+  columns: {
+    id: { title: "id", },
+    name: { title: "地名", },
+    time: { title: "日期", },
+    weather: { title: "天氣", },
+    aqi: { title: "空氣品質", },
+    temperature: { title: "氣溫", }
+  },
+  // 可以設置標籤上的屬性，簡單套用一下 bootstrap 5 table 樣式
+  attrs:{
+    table: { class:['table', 'table-striped', 'table-hover'] }
+  },
+  // 是否顯示 pagination，如果設置為 true 要進行更細節的設置
+  pagination: { show: false },
+});
+t1.rows = data;
+t1.render();</code></pre>
+    <div id="tableMountPoint1" class="m-2"></div>
+</div>
+  <div id="table-section02">
+    naxoTable 還允許使用者渲染函式，如果沒有設定渲染函式會直接在資料陣列中找值顯示，
+    如果有指定渲染函式就會將函式回傳的 dom 掛接到 td 元素上，因此可以達成：
+    <ul>
+      <li>指定不存在資料陣列的欄位</li>
+      <li>根據資料陣列值計算更貼合UI的顯示內容</li>
+    </ul>
+    以氣溫為例子，由於氣溫欄位是陣列([低溫, 高溫])，如果要拆成兩個欄位顯示可以如下設置，
+    請注意 temp_low 和 temp_high，naxoTable 搭配 naxoDom 產生的效果：
+    <pre><code class="javascript">let t2 = new naxoTable("tableMountPoint2");
+t2.Conf({
+  columns: {
+    id: { title: "id", },
+    name: { title: "地名", },
+    time: { title: "日期", },
+    weather: { title: "天氣", },
+    aqi: { title: "空氣品質", },
+    temp_low: { title: "低溫", render: ({ rowIdx, table })=>{
+        let arr = table.rows[rowIdx]['temperature'];
+        return naxoDom.parse(`&lt;div&gt;${arr[0]}&lt;/div&gt;`)
+      } 
+    },
+    temp_high: { title: "高溫", render: ({ rowIdx, table })=>{
+        let arr = table.rows[rowIdx]['temperature'];
+        return naxoDom.parse(`&lt;div&gt;${arr[1]}&lt;/div&gt;`)
+    } }
+  },
+  attrs:{
+    table: { class:['table', 'table-striped', 'table-hover'] }
+  },
+  pagination: { show: false },
+});
+t2.rows = data;
+t2.render()</code></pre>
+    <div id="tableMountPoint2" class="m-2"></div>
+  </div>
+  <div id="table-section03">
+    接下來示範如何隨著值計算表格內容，依照 AQI 空氣品質分數顯示顏色，依照天氣顯示 icon，
+    在末端欄位加入按鈕：
+    <pre><code class="javascript">let t3 = new naxoTable("tableMountPoint3");
+t3.Conf({
+  columns: {
+    id: { title: "id", },
+    name: { title: "地名", },
+    time: { title: "日期", },
+    weather: { title: "天氣", render: ({}, value)=>{
+      let iconClass = ['fas', 'fa-question'];
+      iconClass = value === 'sunny'  ? ['fas', 'fa-sun'] : iconClass
+      iconClass = value === 'windy'  ? ['fas', 'fa-wind'] : iconClass
+      iconClass = value === 'cloudy'  ? ['fas', 'fa-clouds'] : iconClass
+      iconClass = value === 'rainy'  ? ['fas', 'fa-cloud-rain'] : iconClass
+      return naxoDom.parse(`&lt;i class="${iconClass.join(' ')}"&gt;&lt;/i&gt;`)
+    }},
+    aqi: { title: "空氣品質", render: ({}, value)=>{
+      let colorClass = "text-success"
+      colorClass = value > 40 ? 'text-secondary' : colorClass
+      colorClass = value > 70 ? 'text-warning' : colorClass
+      colorClass = value > 100 ? 'text-danger' : colorClass
+      return naxoDom.parse(`&lt;div class="${colorClass}"&gt;${value}&lt;/div&gt;`)
+    }},
+    temp_low: { title: "低溫", render: ({ rowIdx, table })=>{
+      let arr = table.rows[rowIdx]['temperature'];
+      return naxoDom.parse(`&lt;div&gt;${arr[0]}&lt;/div&gt;`)
+    }},
+    temp_high: { title: "高溫", render: ({ rowIdx, table })=>{
+      let arr = table.rows[rowIdx]['temperature'];
+      return naxoDom.parse(`&lt;div&gt;${arr[1]}&lt;/div&gt;`)
+    }},
+    action: { title: "動作", render: ({rowIdx, table})=>{
+      let btn_edit = naxoDom.parse( `&lt;i class="far fa-pencil-alt mx-1"&gt;&lt;/i&gt;` )
+      btn_edit.addEventListener('click', (e)=>{
+        alert(`事件:${e}&lt;br&gt;正在編輯資料：${JSON.stringify(table.rows[rowIdx])}`)
+      })
+      let btn_del = naxoDom.parse( `&lt;i class="far fa-trash-alt mx-1"&gt;&lt;/i&gt;` )
+      btn_del.addEventListener('click', (e)=&gt;{
+        alert(`事件:${e}&lt;br&gt;正在刪除資料：${JSON.stringify(table.rows[rowIdx])}`)
+      })
+      let el = naxoDom.parse(`&lt;div&gt;&lt;/div&gt;`)
+      el.appendChild(btn_edit)
+      el.appendChild(btn_del)
+      return el;
+    }}
+  },
+  attrs:{
+    table: { class:['table', 'table-striped', 'table-hover'] }
+  },
+  pagination: { show: false },
+});
+t3.rows = data;
+t3.render()
+</code></pre>
+    <div id="tableMountPoint3" class="m-2"></div>
+  </div>
     <script type="module" src="/lib/main.ts"></script>
     <script type="module" src="/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
