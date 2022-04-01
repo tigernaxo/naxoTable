@@ -97,7 +97,7 @@ t3.Conf({
         alert(`事件:${e}<br>正在刪除資料：${JSON.stringify(table.rows[rowIdx])}`)
       })
       btn_del.style.cursor = 'pointer'
-      // 掛接
+      // 掛接回傳
       let el = naxoDom.parse(`<div></div>`)
       el.appendChild(btn_edit)
       el.appendChild(btn_del)

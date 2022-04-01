@@ -1,21 +1,35 @@
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-type
+enum INPUT_TYPE {
+  button="button",
+  checkbox="checkbox",
+  file="file",
+  radio="radio",
+  password="password",
+  number="number",
+  range="range",
+  text="text",
+}
 export default class naxoForm {
-  private static selectStr: string = 'input,textarea,select';
+  public ClassNeedValidation: string = "needs-validation" 
+  public ClassWasValidated: string = "was-validated" 
+  private static controlSelector: string = 'input,textarea,select';
   bindEl: HTMLFormElement;
   constructor(idOrEl: string | HTMLFormElement) {
     // 綁定 Dom
-    this.bindEl =
-      typeof idOrEl === "string"
-        ? <HTMLFormElement>document.getElementById(<string>idOrEl)
-        : idOrEl;
-    // 加入驗證邏輯
-    if (this.bindEl.classList.contains("needs-validation")) {
+    this.bindEl = idOrEl instanceof HTMLFormElement
+      ? idOrEl
+      : <HTMLFormElement>document.getElementById(<string>idOrEl)
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement
+    // check description for checkValidity() 
+    if (this.bindEl.classList.contains(this.ClassNeedValidation)) {
       let form = this.bindEl;
+      let classWasValidated = this.ClassWasValidated
       this.bindEl.addEventListener("submit", function (event) {
         if (!form.checkValidity()) {
           event.preventDefault();
           event.stopPropagation();
         }
-        form.classList.add("was-validated");
+        form.classList.add(classWasValidated);
       });
     }
   }
@@ -23,8 +37,9 @@ export default class naxoForm {
   GetData(): any {
     let data: any = {};
     this.getInputElements().forEach(el=>{
-      if ((<Element>el).id) {
-        data[(<Element>el).id] = naxoForm.getValue(<HTMLInputElement>el);
+      el = <Element>el
+      if (el.id) {
+        data[el.id] = naxoForm.getValue(<HTMLInputElement>el);
       }
     })
     return data;
@@ -76,7 +91,7 @@ export default class naxoForm {
     this.bindEl.classList.remove("was-validated");
   }
   private  getInputElements():NodeListOf<Element>{
-    return this.bindEl.querySelectorAll(naxoForm.selectStr)
+    return this.bindEl.querySelectorAll(naxoForm.controlSelector)
   }
   // getValue 取得 HTMLInputElement 的值
   private static getValue(
@@ -94,20 +109,20 @@ export default class naxoForm {
           break;
         case "range":
         case "number":
-          value = numberIsNaNToNull(parseFloat(el.value));
+          value = parseFloat(el.value) || null;
           break;
         case "file":
           value = el.files[0];
           break;
         default:
-          value = stringEmptyToNull(<string>el.value);
+          value = <string>el.value || null;
           break;
       }
     } else if (el instanceof HTMLTimeElement) {
-      value = stringEmptyToNull(<string>el.dateTime);
+      value = <string>el.dateTime || null;
     } else {
       //  HTMLSelectElement|HTMLTextAreaElement 、其他種類的 input
-      value = stringEmptyToNull(<string>el.value);
+      value = <string>el.value || null;
     }
     return value;
   }
@@ -122,17 +137,4 @@ export default class naxoForm {
       el.value = <string>value;
     }
   }
-}
-function stringEmptyToNull(str: string | null): string | null {
-  if (str) {
-    return str.length === 0 ? null : str;
-  }
-  return null;
-}
-
-function numberIsNaNToNull(num: number | null): number | null {
-  if (!(<any>Number).isNaN(num)) {
-    return num;
-  }
-  return null;
 }
