@@ -1,4 +1,4 @@
-import naxoDom from "../naxoDom";
+import naxoDom, { IVDom } from "../naxoDom";
 import Pagination from "./pagination";
 import { Table } from "./tb_Table";
 import { IConfigPagination } from "./pagination";
@@ -38,26 +38,26 @@ export default class naxoTable {
     this.bindDom.innerHTML = '' 
 
     // 將 this.bindDom 掛接上 table
-    let table: HTMLElement = naxoDom.getDom(
-      (<any>Object).assign({ name: "table", attrs: { id } })
-    );
+    let config: IVDom = { name: "table", attrs: { id } }
+    let table: HTMLElement = naxoDom.getDom(config);
     this.bindDom.appendChild(table);
   }
 
   public Conf(config: IConfig) {
     // 先刪除 config 當中指定的 table id
-    if(config?.attrs?.table["id"])
-    {
-      delete config.attrs.table["id"];
-    }
+    config?.attrs?.table["id"] && delete config.attrs.table["id"]; 
     // 加到 table 物件的設定中
     (<any>Object).assign(this.config, { ...config });
   }
   public render() {
     this.bindDom.innerHTML = ""; // 清空
-    this.bindDom.appendChild(Table.getDom(this));
+    // Table 本體
+    let table = Table.getDom(this);
+    this.bindDom.appendChild(table);
+    // pagination
     if(this.config.pagination.show) {
-      this.bindDom.appendChild(Pagination.getDom(this.config.pagination));
+      let pagination = Pagination.getDom(this.config.pagination);
+      this.bindDom.appendChild(pagination);
     }
   }
   public benchmark(times: number) {

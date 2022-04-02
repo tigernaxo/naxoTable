@@ -1,17 +1,17 @@
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-type
-enum INPUT_TYPE {
-  button="button",
-  checkbox="checkbox",
-  file="file",
-  radio="radio",
-  password="password",
-  number="number",
-  range="range",
-  text="text",
-}
+// enum INPUT_TYPE {
+//   button="button",
+//   checkbox="checkbox",
+//   file="file",
+//   radio="radio",
+//   password="password",
+//   number="number",
+//   range="range",
+//   text="text",
+// }
 export default class naxoForm {
-  public ClassNeedValidation: string = "needs-validation" 
-  public ClassWasValidated: string = "was-validated" 
+  private ClassNeedValidation: string = "needs-validation" 
+  private ClassWasValidated: string = "was-validated" 
   private static controlSelector: string = 'input,textarea,select';
   bindEl: HTMLFormElement;
   constructor(idOrEl: string | HTMLFormElement) {
