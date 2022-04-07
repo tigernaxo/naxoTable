@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>naxoTable Demo</title>
+    <style>
+      div {
+        max-width: 1000px;
+      }
+      body>div{
+        margin-left: auto;
+        margin-right: auto;
+      }
+    </style>
   </head>
   <body>
     <div>
@@ -135,6 +144,7 @@ form1.ValidateReset() </code></pre>
     </div>
 </div>
 </div>
+<div>
     <div class="alert alert-success m-1" role="alert">
       naxoTable 搭配 naxoDom 的實際應用：製作靈活變化的 Table... 待續 </div>
       假設有下面的資料，要利用 naxoTable 畫成 Table
@@ -146,6 +156,7 @@ form1.ValidateReset() </code></pre>
   { id: 5, name: 'Taichung', time: '2021/2/3', weather: 'cloudy', aqi: 108, temperature: [15, 22] },
   { id: 6, name: 'Taichung', time: '2021/2/4', weather: 'sunny', aqi: 87, temperature: [16, 22] },
 ]</code></pre>
+</div>
 <div id="table-section01">
 最簡單的方式就是設定要顯示的欄位、欄位名稱，呼叫渲染函式，直接得到渲染的結果：
     <pre><code class="javascript">// 起始化一個 naxoTable
